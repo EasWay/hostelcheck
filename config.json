@@ -1,8 +1,8 @@
 {
     "url": "https://accommodationhub.uenr.edu.gh/",
-    "check_interval_seconds": 28800,
+    "check_interval_seconds": 5,
     "use_keyword": true,
-    "keyword": "hostel",
+    "keyword": "available",
     "monitor_content_changes": true,
     "notification_methods": [
         "email"
