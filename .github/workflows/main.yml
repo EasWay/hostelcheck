@@ -70,7 +70,7 @@ jobs:
         run: python hostelnotifier.py
         
       - name: Upload state file
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: state-file
