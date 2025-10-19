@@ -1,0 +1,78 @@
+name: Hostel Availability Checker
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 6 AM UTC (morning check)
+    - cron: '0 12 * * *'  # 12 PM UTC (afternoon check) 
+    - cron: '0 18 * * *'  # 6 PM UTC (evening check)
+  workflow_dispatch:      # Allow manual trigger
+
+jobs:
+  check-hostel:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install Chrome
+        run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
+          CHROMEDRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}")
+          wget -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com//${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests selenium
+          
+      - name: Create config with secrets
+        run: |
+          cat > config.json << EOF
+          {
+            "url": "https://accommodationhub.uenr.edu.gh/",
+            "check_interval_seconds": 28800,
+            "use_keyword": true,
+            "keyword": "available",
+            "monitor_content_changes": true,
+            "notification_methods": ["email"],
+            "smtp": {
+              "enabled": true,
+              "smtp_host": "smtp.gmail.com",
+              "smtp_port": 587,
+              "username": "${{ secrets.EMAIL_USERNAME }}",
+              "password": "${{ secrets.EMAIL_PASSWORD }}",
+              "from_addr": "${{ secrets.EMAIL_USERNAME }}",
+              "to_addr": "${{ secrets.EMAIL_USERNAME }}"
+            },
+            "timeout_seconds": 30,
+            "user_agent": "hostel-notifier-github-actions/1.0",
+            "state_file": "last_state.json",
+            "single_run": true
+          }
+          EOF
+          
+      - name: Run hostel checker
+        run: python hostelnotifier.py
+        
+      - name: Upload state file
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: state-file
+          path: last_state.json
+          retention-days: 30
