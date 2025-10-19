@@ -1,0 +1,22 @@
+{
+    "url": "https://accommodationhub.uenr.edu.gh/",
+    "check_interval_seconds": 28800,
+    "use_keyword": true,
+    "keyword": "hostel",
+    "monitor_content_changes": true,
+    "notification_methods": [
+        "email"
+    ],
+    "smtp": {
+        "enabled": true,
+        "smtp_host": "smtp.gmail.com",
+        "smtp_port": 587,
+        "username": "fokuocaleb30@gmail.com",
+        "password": "bxjdwcmbnaltnson",
+        "from_addr": "fokuocaleb30@gmail.com",
+        "to_addr": "fokuocaleb30@gmail.com"
+    },
+    "timeout_seconds": 15,
+    "user_agent": "hostel-notifier/1.0",
+    "state_file": "last_state.json"
+}
