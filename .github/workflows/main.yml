@@ -5,7 +5,7 @@ on:
     - cron: '0 6 * * *'   # 6 AM UTC (morning check)
     - cron: '0 12 * * *'  # 12 PM UTC (afternoon check)
     - cron: '0 18 * * *'  # 6 PM UTC (evening check)
-  workflow_dispatch:      # Allow manual trigger
+  workflow_dispatch:
 
 jobs:
   check-hostel:
@@ -23,7 +23,7 @@ jobs:
       - name: Install Chrome 100
         run: |
           wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_100.0.4896.60-1_amd64.deb
-          sudo apt install -y ./google-chrome-stable_100.0.4896.60-1_amd64.deb
+          sudo apt install -y ./google-chrome-stable_100.0.4896.60-1_amd64.deb --allow-downgrades
           google-chrome --version
 
       - name: Install ChromeDriver 100
