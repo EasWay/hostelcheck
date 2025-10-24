@@ -20,37 +20,19 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Chrome
+      - name: Install Chrome 119
         run: |
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          google-chrome --version
 
-      - name: Install ChromeDriver
+      - name: Install ChromeDriver 119
         run: |
-          set -euo pipefail
-
-          CHROME_CMD=$(command -v google-chrome-stable || command -v google-chrome || command -v chromium || command -v chromium-browser || true)
-          if [ -z "$CHROME_CMD" ]; then
-            echo "ERROR: Google Chrome / Chromium not found on PATH"
-            exit 1
-          fi
-
-          CHROME_VERSION=$($CHROME_CMD --version | awk '{print $NF}' | cut -d'.' -f1)
-          echo "Detected Chrome major version: $CHROME_VERSION"
-
-          CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}" || true)
-          if [ -z "$CHROMEDRIVER_VERSION" ]; then
-            echo "No chromedriver for major version ${CHROME_VERSION}, falling back to LATEST_RELEASE"
-            CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE")
-          fi
-          echo "Using chromedriver version: $CHROMEDRIVER_VERSION"
-
-          wget -q -O /tmp/chromedriver.zip "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          sudo unzip -o /tmp/chromedriver.zip -d /usr/local/bin/
+          wget https://chromedriver.storage.googleapis.com/119.0.6045.105/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
-          rm -f /tmp/chromedriver.zip
+          chromedriver --version
 
       - name: Install Python dependencies
         run: |
