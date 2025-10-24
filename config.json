@@ -12,7 +12,7 @@
         "smtp_host": "smtp.gmail.com",
         "smtp_port": 587,
         "username": "fokuocaleb30@gmail.com",
-        "password": "bxjdwcmbnaltnson",
+        "password": "edeaczszbsmjwboj",
         "from_addr": "fokuocaleb30@gmail.com",
         "to_addr": "fokuocaleb30@gmail.com"
     },
@@ -20,3 +20,4 @@
     "user_agent": "hostel-notifier/1.0",
     "state_file": "last_state.json"
 }
+
