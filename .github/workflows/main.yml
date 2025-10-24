@@ -20,10 +20,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Chrome 119
+      - name: Install Chrome 100 (compatible with ChromeDriver 100)
         run: |
-          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          wget https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_100.0.4896.60-1_amd64.deb
+          sudo apt install -y ./google-chrome-stable_100.0.4896.60-1_amd64.deb
           google-chrome --version
 
       - name: Install ChromeDriver 100.0.4896.20
